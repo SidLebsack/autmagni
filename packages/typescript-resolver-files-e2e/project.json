@@ -1,0 +1,46 @@
+{
+  "name": "typescript-resolver-files-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/typescript-resolver-files-e2e/src",
+  "projectType": "library",
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-standard",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-modules",
+          "nx graphql-codegen typescript-resolver-files-e2e -c test-whitelisted",
+          "nx format:write",
+          "packages/typescript-resolver-files-e2e/bin/assert-e2e.sh"
+        ],
+        "parallel": false
+      }
+    },
+    "graphql-codegen": {
+      "executor": "@eddeee888/nx-graphql-code-generator:codegen",
+      "options": {},
+      "configurations": {
+        "test-standard": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-standard/codegen.yml"
+        },
+        "test-modules": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-modules/codegen.yml"
+        },
+        "test-whitelisted": {
+          "configFile": "packages/typescript-resolver-files-e2e/src/test-whitelisted/codegen.yml"
+        }
+      },
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/typescript-resolver-files/**/*.ts"]
+      }
+    }
+  },
+  "implicitDependencies": ["typescript-resolver-files"],
+  "tags": []
+}
